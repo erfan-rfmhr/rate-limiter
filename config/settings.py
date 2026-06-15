@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'accounts',
+    'drf_spectacular',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +127,17 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
+
+# DRF
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'config.schema.AppLabelTaggedSchema',
+}
+
+
+
+# DRF Spectacular
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Rate Limiter API',
+    'VERSION': '1.0',
+    'DESCRIPTION': 'Rate Limiter API',
+}
