@@ -16,7 +16,7 @@ class WalletViewSet(viewsets.GenericViewSet):
         return Wallet.objects.get(user=self.request.user)
 
     def throttled(self, request, wait):
-        
+
         raise exceptions.Throttled(wait)
 
     @action(detail=False, methods=["GET"])
