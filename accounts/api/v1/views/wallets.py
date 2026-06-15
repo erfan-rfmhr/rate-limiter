@@ -1,3 +1,4 @@
+import logging
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import viewsets, exceptions
@@ -16,7 +17,8 @@ class WalletViewSet(viewsets.GenericViewSet):
         return Wallet.objects.get(user=self.request.user)
 
     def throttled(self, request, wait):
-
+        logger = logging.getLogger("api_request")
+        logger.error(f"Rate limit exceeded for user {request.user.username}: {wait}")
         raise exceptions.Throttled(wait)
 
     @action(detail=False, methods=["GET"])
