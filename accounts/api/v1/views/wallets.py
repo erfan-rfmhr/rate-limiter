@@ -27,7 +27,7 @@ class WalletViewSet(viewsets.ReadOnlyModelViewSet):
 
     @action(detail=False, methods=["POST"], throttle_classes=[UserRateThrottle])
     def deposit(self, request):
-        wallet = self.get_object()
+        wallet = Wallet.objects.select_for_update().filter(user=request.user).first()
         serializer = self.get_serializer(wallet, data=request.data)
         serializer.is_valid(raise_exception=True)
         wallet.deposit(serializer.validated_data["balance"])
@@ -35,7 +35,7 @@ class WalletViewSet(viewsets.ReadOnlyModelViewSet):
 
     @action(detail=False, methods=["POST"], throttle_classes=[UserRateThrottle])
     def withdraw(self, request):
-        wallet = self.get_object()
+        wallet = Wallet.objects.select_for_update().filter(user=request.user).first()
         serializer = self.get_serializer(wallet, data=request.data)
         serializer.is_valid(raise_exception=True)
         wallet.withdraw(serializer.validated_data["balance"])
