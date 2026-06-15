@@ -6,3 +6,4 @@ class WalletSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wallet
         fields = ["user", "balance"]
+        read_only_fields = ["user"]
