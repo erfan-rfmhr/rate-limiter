@@ -131,6 +131,9 @@ AUTH_USER_MODEL = 'accounts.User'
 # DRF
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'config.schema.AppLabelTaggedSchema',
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '5/min',
+    }
 }
 
 

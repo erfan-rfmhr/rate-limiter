@@ -1,10 +1,10 @@
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework import viewsets
+from rest_framework import viewsets, exceptions
 from accounts.models import Wallet
 from accounts.api.v1.serializers import WalletSerializer
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.throttling import UserRateThrottle
 
 
 class WalletViewSet(viewsets.ReadOnlyModelViewSet):
@@ -15,13 +15,17 @@ class WalletViewSet(viewsets.ReadOnlyModelViewSet):
     def get_object(self):
         return Wallet.objects.get(user=self.request.user)
 
+    def throttled(self, request, wait):
+        
+        raise exceptions.Throttled(wait)
+
     @action(detail=False, methods=["GET"])
     def details(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-    @action(detail=False, methods=["POST"])
+    @action(detail=False, methods=["POST"], throttle_classes=[UserRateThrottle])
     def deposit(self, request):
         wallet = self.get_object()
         serializer = self.get_serializer(wallet, data=request.data)
@@ -29,7 +33,7 @@ class WalletViewSet(viewsets.ReadOnlyModelViewSet):
         wallet.deposit(serializer.validated_data["balance"])
         return Response(serializer.data)
 
-    @action(detail=False, methods=["POST"])
+    @action(detail=False, methods=["POST"], throttle_classes=[UserRateThrottle])
     def withdraw(self, request):
         wallet = self.get_object()
         serializer = self.get_serializer(wallet, data=request.data)
