@@ -50,6 +50,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "config.middlewares.APILoggingMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -172,7 +173,7 @@ LOGGING = {
         },
         "api_request": {
             "handlers": ["api_request"],
-            "level": "ERROR",
+            "level": "INFO",
             "propagate": False,
         },
     },
