@@ -15,11 +15,9 @@ class Wallet(models.Model):
         self.balance = amount
         # Implement deposit logic here
         self.save()
-        return self
 
     @transaction.atomic
     def withdraw(self, amount):
         self.balance = amount
         # Implement withdraw logic here
         self.save()
-        return self
