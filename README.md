@@ -23,7 +23,7 @@ Using pip:
 - Start the project using `python manage.py runserver`.
 
 ## Architecture
-The code follows `fat models, skinny views` architecture. Views are responsible for handling requests and responses, logic is handled by serializers and models.
+The code follows `fat models, skinny views` architecture. Views are responsible for handling requests and responses, while logic is handled by serializers and models.
 
 ### Configuration
 All configurations and variables are stored in `config/` such as settings and url dispatch.
@@ -71,8 +71,65 @@ Key notes:
 Throttling rates are defined in `config/settings.py` as `DEFAULT_THROTTLE_RATES`.
 Limitation is set for logical APIs; `api/v1/accounts/wallets/deposit` and `api/v1/accounts/wallets/withdraw` in this case.
 
+### Middleware
+Custom middleware for logging API requests is implemented in `config/middlewares.py`.
+
+```
+import logging
+
+
+class APILoggingMiddleware:
+    def __init__(self, get_response):
+        self.logger = logging.getLogger("api_request")
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+
+        self.logger.info(
+            f"{request.method} {request.path} | Response: {response.status_code}"
+        )
+
+        return response
+```
+
 ### Logging
-API logs are stored in `api_request.log` file.
+The logging configuration is implemented in `config/settings.py` as `LOGGING`.
+```
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "basic": {
+            "format": "%(asctime)s %(levelname)s %(name)s | %(message)s",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "basic",
+        },
+        "api_request": {
+            "class": "logging.FileHandler",
+            "filename": "api_request.log",
+            "formatter": "basic",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "api_request": {
+            "handlers": ["api_request"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
+```
+API logs are stored in `api_request.log` file by `api_request` logger.
 For every request, an INFO‌ message is logged with the request details.
 For every throttled request, an ERROR message is logged with the request details.
 
@@ -85,9 +142,15 @@ The test checks:
 - The limitation is reset after 60 seconds.
 - Users do not affect on each other's limitation.
 
+Run test using `uv run python manage.py test` or `python manage.py test` after activating the virtual environment.
+
 ### Exception Handling
 A custom exception handler is implemented in `config/exception_handler.py` in order to support more django core exceptions and provide complete responses.
 
 ### Documenting
 All APIs are documented in openapi format.
 The documentation is available at `/schema`, `/schema/swagger-ui` and `/schema/redoc`.
+
+## Enhancements
+- Using Redis as a cache database. In this case, the local memory is used for simplicity.
+- Manage environment variables in separated files to manage environments independently. As this project is not implemented for production, default values are enough.
