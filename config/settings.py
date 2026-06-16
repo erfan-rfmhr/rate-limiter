@@ -134,6 +134,7 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "user": "5/min",
     },
+    "EXCEPTION_HANDLER": "config.exception_handler.custom_exception_handler",
 }
 
 
