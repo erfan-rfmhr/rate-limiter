@@ -22,6 +22,8 @@ Using pip:
 - Migrate the database using `python manage.py migrate`.
 - Start the project using `python manage.py runserver`.
 
+Install pre-commit hooks using `pre-commit install` for development.
+
 ## Architecture
 The code follows `fat models, skinny views` architecture. Views are responsible for handling requests and responses, while logic is handled by serializers and models.
 
