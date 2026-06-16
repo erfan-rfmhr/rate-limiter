@@ -17,7 +17,7 @@ To start the project using uv:
 
 Using pip:
 - Create a virtual environment using `python -m venv .venv`.
-- Activate the virtual environment using `source .venv/bin/activate` in linux/macOS or `venv\Scripts\activate` in windows.
+- Activate the virtual environment using `source .venv/bin/activate` in linux/macOS or `.venv\Scripts\activate` in windows.
 - Install the project dependencies using `pip install -r requirements.txt`.
 - Migrate the database using `python manage.py migrate`.
 - Start the project using `python manage.py runserver`.
@@ -63,7 +63,7 @@ accounts/
 └── tests.py
 ```
 Key notes:
-- Semantic versioning is used for APIs under `api/<version>`.
+- Semantic versioning is applied to APIs using `api/<version>` style. All serializers and views are grouped by versions.
 - All APIs are openapi formatted documented in `schema/`.
 - Components of each domain (for example users and wallets) are grouped in their own files.
 
