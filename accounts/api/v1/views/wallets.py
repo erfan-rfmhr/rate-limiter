@@ -1,3 +1,4 @@
+from accounts.services.rate_limiter import RateLimiter
 import logging
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -27,16 +28,22 @@ class WalletViewSet(viewsets.GenericViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-    @action(detail=False, methods=["POST"], throttle_classes=[UserRateThrottle])
+    @action(detail=False, methods=["POST"])
     def deposit(self, request):
+        # check rate limit
+        RateLimiter.check(request.user)
+
         wallet = Wallet.objects.select_for_update().filter(user=request.user).first()
         serializer = self.get_serializer(wallet, data=request.data)
         serializer.is_valid(raise_exception=True)
         wallet.deposit(serializer.validated_data["balance"])
         return Response(serializer.data)
 
-    @action(detail=False, methods=["POST"], throttle_classes=[UserRateThrottle])
+    @action(detail=False, methods=["POST"])
     def withdraw(self, request):
+        # check rate limit
+        RateLimiter.check(request.user)
+
         wallet = Wallet.objects.select_for_update().filter(user=request.user).first()
         serializer = self.get_serializer(wallet, data=request.data)
         serializer.is_valid(raise_exception=True)
