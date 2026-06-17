@@ -6,7 +6,6 @@ from rest_framework import viewsets, exceptions
 from accounts.models import Wallet
 from accounts.api.v1.serializers import WalletSerializer
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.throttling import UserRateThrottle
 
 
 class WalletViewSet(viewsets.GenericViewSet):
