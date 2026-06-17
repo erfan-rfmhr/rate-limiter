@@ -9,6 +9,11 @@ Rate limiter is a sample project that implements a rate limiting alongside with 
 ## Get Started
 Clone the repo using `git clone https://github.com/erfan-rfmhr/rate-limiter.git`.
 Change directory to the project using `cd rate-limiter`.
+
+To start the project with docker;
+- `docker-compose up -d`
+- open `http://localhost:8000` in your browser.
+
 To start the project using uv:
 - Install uv using `pip install uv`.
 - Install the project dependencies using `uv sync`.
